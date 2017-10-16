@@ -145,14 +145,8 @@ cancer_types = names(Wall)
 feature_types = names(Wall[[1]])
 data_types = names(Wall[[1]][[1]])
 
-tmp = lapply(1:length(data_types), function(i) combn(data_types, i))
-data_types_combn = list()
-for (i in tmp){
-    for(j in 1:ncol(i)){
-        data_types_combn[[paste(i[,j],collapse = ".")]] = i[,j]
-    }
-}
-data_types_combn
+data_types_combn <- unlist(sapply(seq_along(data_types), function(i) combn(data_types, i, list)), recursive = FALSE)
+names(data_types_combn) <- sapply(data_types_combn, function(elt) paste(elt, collapse = "."))
 ```
 
 We can run ANF for all 210 possible combinations (i.e., five cancer_types, six feature normalization measures, and seven data combinations) using three `for` loops below, and store the results ("NMI", "ARI" and "-log10(pvalue)") in `res.ANF` (for plotting figures later), and store the fused affinity matrices in `Ws.ANF`. Note this takes at least several minutes.
